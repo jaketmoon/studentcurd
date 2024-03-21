@@ -103,7 +103,11 @@ void calculateTotalGradeAndRank(Student* head) {
         // Assign ranks to the students
         temp = head;
         while (temp != NULL) {
-            temp->totalGrade = temp->mathGrade + temp->englishGrade + temp->scienceGrade;
+            #include <math.h> // Include the math.h header file for the roundf function
+
+            if (temp != NULL) {
+                temp->totalGrade = roundf((temp->mathGrade + temp->englishGrade + temp->scienceGrade) * 100) / 100;
+            }
             temp->next = rank++;
             temp = temp->next;
         }
