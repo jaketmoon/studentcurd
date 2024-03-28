@@ -13,6 +13,29 @@ struct Student {
 	float marks;
 	struct Student *next;
 };
+int flag=0;//权限标志
+//权限认证
+int authentication() {
+    printf("请选择身份登录：1.学生（无需密码，仅有查看权限）2.管理员（需要密码，有所有权限）\n");
+    int ch,key,mima;
+    mima=123;
+    scanf("%d",&ch);
+    switch (ch){
+        case 1:
+            return 0;
+        case 2:
+            printf("请输入密码：");
+            scanf("%d",&key);
+            if(key==mima){
+                printf("验证通过。");
+                return 1;
+            }
+            else{
+                printf("密码错误，验证失败。系统自动以学生身份登录。");
+                return 0;
+            }
+    }
+}
 void printCenter(char* text) {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	int columns;
@@ -516,6 +539,7 @@ int main() {
 		printf("	      学生成绩管理系统");
 		printf("	      ■	\n");
 		printf("					■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■	\n");
+		printf("                        0.         身份认证     \n");
 		printf("						1.       添加学生信息	\n");
 		printf("						2.    展示所有学生记录	\n");
 		printf("						3. 通过学号寻找学生记录\n");
@@ -534,11 +558,20 @@ int main() {
 		scanf("%d", &choice);
 
 		switch (choice) {
+			case 0:
+                flag=authentication();
+                break;
 			case 1:
-				load(&head);
-				addStudent(&head);
-				save(head);
-				break;
+				if(flag==1){
+					load(&head);
+					addStudent(&head);
+					save(head);
+					break;
+				}
+				else{
+                    printf("无权限。");
+                    break;
+				}
 			case 2:
 				load(&head);
 				displayStudents(head);
@@ -556,19 +589,31 @@ int main() {
 				searchByName(head, name);
 				break;
 			case 5:
-				load(&head);
-				printCenterContinue("输入删除的学号：");
-				scanf("%d", &rollNumber);
-				deleteByRollNumber(&head, rollNumber);
-				save(head);
-				break;
+				if(flag==1){
+					load(&head);
+					printCenterContinue("输入删除的学号：");
+					scanf("%d", &rollNumber);
+					deleteByRollNumber(&head, rollNumber);
+					save(head);
+					break;
+				}
+				else{
+                    printf("无权限。");
+                    break;
+				}
 			case 6:
-				load(&head);
-				printCenterContinue("输入更新的学号：");
-				scanf("%d", &rollNumber);
-				updateByRollNumber(head, rollNumber);
-				save(head);
-				break;
+				if(flag==1){
+					load(&head);
+					printCenterContinue("输入更新的学号：");
+					scanf("%d", &rollNumber);
+					updateByRollNumber(head, rollNumber);
+					save(head);
+					break;
+				}
+				else{
+                    printf("无权限。");
+                    break;
+				}
 			case 7:
 				load(&head);
 				sortByRollNumber(&head);
